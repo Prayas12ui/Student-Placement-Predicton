@@ -23,6 +23,7 @@
             <section class="form-section glass">
                 <h2>Predict Student Outcome</h2>
                 <form id="predictionForm">
+                    <div class="form-group-header">🎓 Academic Details</div>
                     <div class="form-group-row">
                         <div class="form-group">
                             <label for="degree_type">Degree Level</label>
@@ -66,6 +67,7 @@
                         </div>
                     </div>
 
+                    <div class="form-group-header">💻 Skills Details</div>
                     <div class="form-group-row">
                         <div class="form-group">
                             <label for="prog_skills">Programming Skills (0-100)</label>
@@ -77,6 +79,7 @@
                         </div>
                     </div>
 
+                    <div class="form-group-header">💼 Experience Details</div>
                     <div class="form-group-row">
                         <div class="form-group">
                             <label for="internships">Internships</label>
@@ -105,10 +108,86 @@
 
                     <button type="submit" class="btn-predict" id="submitBtn">Generate Prediction</button>
                 </form>
+                
+                <div class="tips-panel glass" style="margin-top: 1.5rem; background: rgba(15, 23, 42, 0.8);">
+                    <h4 style="color: #60a5fa; font-size: 1.1rem; margin-bottom: 0.5rem;">🔍 Weak Area Preview</h4>
+                    <div id="livePreview" style="background: rgba(30, 58, 138, 0.2); border-left: 3px solid #3b82f6; padding: 0.75rem; border-radius: 6px; font-size: 0.9rem; margin-bottom: 1.25rem; color: #93c5fd;">
+                        Based on your inputs, focus areas may include: <em>Waiting for inputs...</em>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem;">
+                        <div style="flex: 1; background: rgba(30, 41, 59, 0.5); padding: 1rem; border-radius: 8px;">
+                            <h4 style="font-size: 0.95rem; color: #a78bfa; margin-bottom: 0.5rem;">📄 Resume & Interview Tips</h4>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 0.25rem;">
+                                <li>Use action verbs in resume</li>
+                                <li>Prepare STAR method answers</li>
+                                <li>Link active GitHub & Portfolio</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="motivational-note" style="margin-top: 1.25rem; font-weight: 600;">
+                        "Your placement success depends on consistency and practice."
+                    </div>
+                </div>
+                
             </section>
 
             <!-- Right Side: Metrics & Result -->
             <div class="info-section">
+                
+                <div id="defaultRightPanel" class="default-panel">
+                    <section class="readiness-card glass" style="margin-bottom: 1.5rem;">
+                        <h3 style="color: #10b981; font-size: 1.25rem; margin-bottom: 0.5rem;">🚀 Placement Readiness</h3>
+                        <p id="readinessStatus" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Status: <strong style="color: #f59e0b;">Evaluating...</strong></p>
+                        <div style="display: flex; gap: 1rem; font-size: 0.85rem;">
+                            <div style="flex: 1; background: rgba(16, 185, 129, 0.1); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                <strong style="color: #10b981; display:block; margin-bottom:0.25rem;">Strong Areas</strong>
+                                <span id="strongAreasPreview" style="color: #e2e8f0;">-</span>
+                            </div>
+                            <div style="flex: 1; background: rgba(239, 68, 68, 0.1); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.2);">
+                                <strong style="color: #f87171; display:block; margin-bottom:0.25rem;">Focus Areas</strong>
+                                <span id="focusAreasPreview" style="color: #e2e8f0;">-</span>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="roadmap-card glass" style="margin-bottom: 1.5rem;">
+                        <h3 style="color: #60a5fa; font-size: 1.25rem; margin-bottom: 1rem;">🗺️ Placement Roadmap</h3>
+                        <ul class="roadmap-list" style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
+                            <li style="display: flex; align-items: center; gap: 0.75rem; background: rgba(15, 23, 42, 0.5); padding: 0.75rem; border-radius: 8px;"><span style="background: #3b82f6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">1</span> Improve coding and aptitude</li>
+                            <li style="display: flex; align-items: center; gap: 0.75rem; background: rgba(15, 23, 42, 0.5); padding: 0.75rem; border-radius: 8px;"><span style="background: #a78bfa; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">2</span> Build projects and resume</li>
+                            <li style="display: flex; align-items: center; gap: 0.75rem; background: rgba(15, 23, 42, 0.5); padding: 0.75rem; border-radius: 8px;"><span style="background: #f59e0b; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">3</span> Practice interviews</li>
+                            <li style="display: flex; align-items: center; gap: 0.75rem; background: rgba(15, 23, 42, 0.5); padding: 0.75rem; border-radius: 8px;"><span style="background: #10b981; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">4</span> Apply for internships/jobs</li>
+                        </ul>
+                    </section>
+                    
+                    <section class="skills-card glass" style="margin-bottom: 1.5rem;">
+                        <h3 style="color: #f472b6; font-size: 1.25rem; margin-bottom: 1rem;">⚡ Key Skills for Placement</h3>
+                        <div class="skills-chips">
+                            <a href="/topic/dsa" class="chip" style="text-decoration: none;">DSA</a>
+                            <a href="/topic/dbms" class="chip" style="text-decoration: none;">DBMS</a>
+                            <a href="/topic/oops" class="chip" style="text-decoration: none;">OOPs</a>
+                            <a href="/topic/os" class="chip" style="text-decoration: none;">OS</a>
+                            <a href="/topic/cn" class="chip" style="text-decoration: none;">CN</a>
+                            <a href="/topic/aptitude" class="chip" style="text-decoration: none;">Aptitude</a>
+                            <a href="/topic/hr" class="chip" style="text-decoration: none;">Communication / HR</a>
+                            <a href="/topic/python" class="chip" style="text-decoration: none;">Python</a>
+                        </div>
+                    </section>
+                    
+                    <section class="tips-card glass">
+                        <h3 style="color: #fbbf24; font-size: 1.25rem; margin-bottom: 0.75rem;">💡 Career Tips</h3>
+                        <ul style="font-size: 0.85rem; padding-left: 1.25rem; color: #e2e8f0; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <li>Keep your resume short and clear.</li>
+                            <li>Practice mock interviews often.</li>
+                            <li>Maintain a dynamic GitHub portfolio.</li>
+                            <li>Improve communication confidence.</li>
+                        </ul>
+                    </section>
+                </div>
+
+                <div id="resultRightPanel" class="hidden">
                 <section class="result-card glass hidden" id="resultCard">
                     <h3>Prediction Outcome</h3>
                     <div id="predictionResult" class="result-text">Waiting for input...</div>
@@ -133,42 +212,14 @@
                         
                         <button type="button" id="startPrepBtn" class="btn-predict btn-secondary">Start Preparation</button>
                         
-                        <div id="quizContainer" class="quiz-container hidden">
-                            <h4>🧠 Interactive Practice / Quiz</h4>
-                            <p class="quiz-help">Enter a topic (e.g., DBMS, OOPs, Python, HR, Aptitude):</p>
-                            <div class="quiz-input-row">
-                                <input type="text" id="quizTopic" placeholder="Topic name...">
-                                <button type="button" id="startQuizBtn" class="btn-predict btn-small">Practice</button>
-                            </div>
-                            <div id="quizResults" class="quiz-results"></div>
-                        </div>
-                        
+
                         <div class="motivational-note">Focus on these areas to improve your placement readiness.</div>
                     </div>
                 </section>
 
-                <section class="metrics-panel glass">
-                    <h2>AutoML Diagnostics</h2>
-                    <p>Powered by PyCaret Classification</p>
-                    <div class="metrics-grid">
-                        <div class="metric">
-                            <span class="label">Best Algorithm</span>
-                            <strong id="modelName">Loading...</strong>
-                        </div>
-                        <div class="metric">
-                            <span class="label">Accuracy</span>
-                            <strong id="modelAccuracy">--%</strong>
-                        </div>
-                        <div class="metric">
-                            <span class="label">Precision</span>
-                            <strong id="modelPrecision">--%</strong>
-                        </div>
-                        <div class="metric">
-                            <span class="label">Recall</span>
-                            <strong id="modelRecall">--%</strong>
-                        </div>
                     </div>
-                </section>
+                </div>
+
             </div>
         </div>
     </div>
