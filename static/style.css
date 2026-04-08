@@ -289,4 +289,130 @@ input:focus, select:focus {
     background: rgba(59, 130, 246, 0.1);
     padding: 0.75rem;
     border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+/* Assistant UI Elements */
+.assistant-container {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: fadeIn 0.6s ease;
+}
+
+.assistant-container.hidden {
+    display: none;
+}
+
+.assistant-section h4 {
+    font-size: 1.15rem;
+    color: #a78bfa; /* Soft purple */
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+    padding-bottom: 0.5rem;
+}
+
+.assistant-list {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.assistant-list li {
+    background: rgba(15, 23, 42, 0.5);
+    border-left: 3px solid #8b5cf6; /* Purple accent */
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.assistant-list.plan-list li {
+    border-left-color: #10b981; /* Green accent for prep plans */
+}
+
+.btn-secondary {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    margin-top: 0.5rem;
+}
+
+.btn-secondary:hover {
+    background: rgba(51, 65, 85, 0.9);
+}
+
+.btn-secondary.hidden {
+    display: none;
+}
+
+.quiz-container {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-top: 0.5rem;
+    animation: fadeIn 0.4s ease;
+}
+
+.quiz-container.hidden {
+    display: none;
+}
+
+.quiz-container h4 {
+    font-size: 1.15rem;
+    color: #60a5fa;
+    margin-bottom: 0.5rem;
+}
+
+.quiz-help {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.quiz-input-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.quiz-input-row input {
+    flex: 1;
+    padding: 0.6rem 1rem;
+}
+
+.btn-small {
+    width: auto;
+    margin-top: 0;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+}
+
+.quiz-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quiz-item {
+    background: rgba(30, 41, 59, 0.5);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 3px solid #3b82f6;
+}
+
+.quiz-item strong {
+    display: block;
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.quiz-answer {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    background: rgba(2, 6, 23, 0.4);
+    padding: 0.75rem;
+    border-radius: 6px;
 }

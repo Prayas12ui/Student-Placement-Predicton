@@ -118,7 +118,32 @@
                         <h4>Areas to Improve</h4>
                         <p id="weakAreasSummary" class="weak-areas-summary"></p>
                         <ul id="improvementList" class="improvement-list"></ul>
-                        <div class="motivational-note">Focus on these improvements to increase placement chances.</div>
+                    </div>
+                    
+                    <div id="assistantContainer" class="assistant-container hidden">
+                        <div class="assistant-section">
+                            <h4>📚 Recommended Study Resources</h4>
+                            <ul id="resourceList" class="assistant-list"></ul>
+                        </div>
+                        
+                        <div class="assistant-section">
+                            <h4>📋 Preparation Plan</h4>
+                            <ul id="prepPlanList" class="assistant-list plan-list"></ul>
+                        </div>
+                        
+                        <button type="button" id="startPrepBtn" class="btn-predict btn-secondary">Start Preparation</button>
+                        
+                        <div id="quizContainer" class="quiz-container hidden">
+                            <h4>🧠 Interactive Practice / Quiz</h4>
+                            <p class="quiz-help">Enter a topic (e.g., DBMS, OOPs, Python, HR, Aptitude):</p>
+                            <div class="quiz-input-row">
+                                <input type="text" id="quizTopic" placeholder="Topic name...">
+                                <button type="button" id="startQuizBtn" class="btn-predict btn-small">Practice</button>
+                            </div>
+                            <div id="quizResults" class="quiz-results"></div>
+                        </div>
+                        
+                        <div class="motivational-note">Focus on these areas to improve your placement readiness.</div>
                     </div>
                 </section>
 
