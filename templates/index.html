@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Placement Prediction</title>
+    <meta name="description" content="Predict student placement outcomes using machine learning.">
+    <!-- Using Jinja syntax to properly route static files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header glass">
+            <div class="header-content">
+                <h1>Student Placement Prediction</h1>
+                <p>Empowering precise placement forecasting</p>
+            </div>
+        </header>
+
+        <div class="content-grid">
+            <!-- Left Side: Form -->
+            <section class="form-section glass">
+                <h2>Predict Student Outcome</h2>
+                <form id="predictionForm">
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="degree_type">Degree Level</label>
+                            <select id="degree_type" name="Degree_Type" required>
+                                <option value="UG">Undergraduate (UG)</option>
+                                <option value="PG">Postgraduate (PG)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="course">Course</label>
+                            <select id="course" name="Course" required>
+                                <option value="BTech">BTech</option>
+                                <option value="BCA">BCA</option>
+                                <option value="MCA">MCA</option>
+                                <option value="MTech">MTech</option>
+                                <option value="MBA">MBA</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="tenth_marks">10th Marks (%)</label>
+                            <input type="number" id="tenth_marks" name="10th_Marks" min="0" max="100" step="0.1" value="75" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="twelfth_marks">12th Marks (%)</label>
+                            <input type="number" id="twelfth_marks" name="12th_Marks" min="0" max="100" step="0.1" value="75" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="ug_cgpa">UG CGPA (0-10)</label>
+                            <input type="number" id="ug_cgpa" name="UG_CGPA" min="0" max="10" step="0.1" value="7.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pg_cgpa">PG CGPA (if applicable)</label>
+                            <input type="number" id="pg_cgpa" name="PG_CGPA" min="0" max="10" step="0.1" value="0.0">
+                        </div>
+                    </div>
+
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="prog_skills">Programming Skills (0-100)</label>
+                            <input type="number" id="prog_skills" name="Programming_Skills" min="0" max="100" value="70">
+                        </div>
+                        <div class="form-group">
+                            <label for="comm_skills">Comms Skills (0-100)</label>
+                            <input type="number" id="comm_skills" name="Communication_Skills" min="0" max="100" value="70">
+                        </div>
+                    </div>
+
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="internships">Internships</label>
+                            <select id="internships" name="Internships">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3+</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="projects">Projects</label>
+                            <select id="projects" name="Projects">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4+</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="backlogs">Active Backlogs</label>
+                            <input type="number" id="backlogs" name="Backlogs" min="0" max="10" value="0">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-predict" id="submitBtn">Generate Prediction</button>
+                </form>
+            </section>
+
+            <!-- Right Side: Metrics & Result -->
+            <div class="info-section">
+                <section class="result-card glass hidden" id="resultCard">
+                    <h3>Prediction Outcome</h3>
+                    <div id="predictionResult" class="result-text">Waiting for input...</div>
+                    <p id="predictionExplanation" class="prediction-explanation hidden"></p>
+                    
+                    <div id="improvementSection" class="improvement-section hidden">
+                        <h4>Areas to Improve</h4>
+                        <p id="weakAreasSummary" class="weak-areas-summary"></p>
+                        <ul id="improvementList" class="improvement-list"></ul>
+                        <div class="motivational-note">Focus on these improvements to increase placement chances.</div>
+                    </div>
+                </section>
+
+                <section class="metrics-panel glass">
+                    <h2>AutoML Diagnostics</h2>
+                    <p>Powered by PyCaret Classification</p>
+                    <div class="metrics-grid">
+                        <div class="metric">
+                            <span class="label">Best Algorithm</span>
+                            <strong id="modelName">Loading...</strong>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Accuracy</span>
+                            <strong id="modelAccuracy">--%</strong>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Precision</span>
+                            <strong id="modelPrecision">--%</strong>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Recall</span>
+                            <strong id="modelRecall">--%</strong>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
