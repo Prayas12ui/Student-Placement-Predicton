@@ -24,44 +24,71 @@ const PREP_PLANS = {
     "General": "System Design (LLD/HLD), Behavior Modeling"
 };
 
-const QUIZ_DB = {
-    "dbms": [
-        { q: "What is ACID property in DBMS?", a: "Atomicity, Consistency, Isolation, Durability." },
-        { q: "What is the difference between TRUNCATE and DELETE?", a: "TRUNCATE is DDL and removes all rows quickly without logging individual row deletions. DELETE is DML and removes specified rows with transaction logging." },
-        { q: "Explain normalization.", a: "Organizing data to reduce redundancy and improve data integrity." }
-    ],
-    "oops": [
-        { q: "What are the four pillars of OOPs?", a: "Encapsulation, Abstraction, Inheritance, Polymorphism." },
-        { q: "What is an abstract class?", a: "A class that cannot be instantiated and usually contains abstract methods that subclasses must implement." }
-    ],
-    "python": [
-        { q: "What are the key differences between list and tuple?", a: "Lists are mutable, tuples are immutable. Lists use [], tuples use ()." },
-        { q: "Explain decorators in Python.", a: "A decorator takes a function, modifies its behavior, and returns a new function." }
-    ],
-    "aptitude": [
-        { q: "A train running at 54 kmph crosses a pole in 20 seconds. What is the length of the train?", a: "54 kmph = 15 m/s. Length = 15 * 20 = 300 meters." }
-    ],
-    "hr": [
-        { q: "Tell me about yourself.", a: "Focus on present role, past experiences directly related to the job, and future goals." },
-        { q: "What are your greatest weaknesses?", a: "State a real weakness but show actionable steps you are taking to improve it." }
-    ]
-};
+
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Load metrics on startup
-    fetch('/metrics')
-        .then(response => response.json())
-        .then(data => {
-            if (!data.error) {
-                document.getElementById('modelName').textContent = data.best_model;
-                document.getElementById('modelAccuracy').textContent = data.accuracy;
-                document.getElementById('modelPrecision').textContent = data.precision;
-                document.getElementById('modelRecall').textContent = data.recall;
-            }
-        })
-        .catch(error => console.error("Error loading metrics:", error));
-
     const form = document.getElementById('predictionForm');
+    
+    // Live preview updating
+    const updatePreview = () => {
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        let weakAreas = [];
+        if (parseFloat(data['10th_Marks'] || 100) < 70) weakAreas.push("10th Marks");
+        if (parseFloat(data['12th_Marks'] || 100) < 70) weakAreas.push("12th Marks");
+        if (data['Degree_Type'] === 'UG' && parseFloat(data['UG_CGPA'] || 10) < 7.0) {
+            weakAreas.push("UG CGPA");
+        } else if (data['Degree_Type'] === 'PG') {
+            if (parseFloat(data['PG_CGPA'] || 10) < 7.0) weakAreas.push("PG CGPA");
+            if (parseFloat(data['UG_CGPA'] || 10) < 7.0) weakAreas.push("UG CGPA");
+        }
+        if (parseInt(data['Programming_Skills'] || 100) < 60) weakAreas.push("Programming Skills");
+        if (parseInt(data['Communication_Skills'] || 100) < 60) weakAreas.push("Communication Skills");
+        if (parseInt(data['Internships'] || 1) === 0) weakAreas.push("No Internships");
+        if (parseInt(data['Projects'] || 5) < 2) weakAreas.push("Few Projects");
+        if (parseInt(data['Backlogs'] || 0) > 0) weakAreas.push("Active Backlogs");
+
+        let strongAreas = [];
+        if (parseFloat(data['10th_Marks'] || 0) >= 80) strongAreas.push("10th Marks");
+        if (parseFloat(data['12th_Marks'] || 0) >= 80) strongAreas.push("12th Marks");
+        if (parseFloat(data['UG_CGPA'] || 0) >= 8.0) strongAreas.push("UG CGPA");
+        if (parseInt(data['Programming_Skills'] || 0) >= 80) strongAreas.push("Programming");
+        if (parseInt(data['Communication_Skills'] || 0) >= 80) strongAreas.push("Communication");
+        if (parseInt(data['Internships'] || 0) > 0) strongAreas.push("Internships");
+        if (parseInt(data['Projects'] || 0) >= 2) strongAreas.push("Projects");
+
+        const previewContainer = document.getElementById('livePreview');
+        if (previewContainer) {
+            if (weakAreas.length > 0) {
+                previewContainer.innerHTML = `Based on your inputs, focus areas may include: <strong>${weakAreas.join(", ")}</strong>`;
+            } else {
+                previewContainer.innerHTML = `Based on your inputs, focus areas may include: <em>General Preparation</em>`;
+            }
+        }
+        
+        const focusPreview = document.getElementById('focusAreasPreview');
+        const strongPreview = document.getElementById('strongAreasPreview');
+        const readStatus = document.getElementById('readinessStatus');
+        
+        if (focusPreview && strongPreview && readStatus) {
+            focusPreview.textContent = weakAreas.length > 0 ? weakAreas.join(", ") : "None Detected";
+            strongPreview.textContent = strongAreas.length > 0 ? strongAreas.join(", ") : "Building Base";
+            
+            if (weakAreas.length === 0 && strongAreas.length >= 3) {
+                readStatus.innerHTML = `Status: <strong style="color: #10b981;">Highly Ready 🌟</strong>`;
+            } else if (weakAreas.length > 3) {
+                readStatus.innerHTML = `Status: <strong style="color: #ef4444;">Needs Preparation ⚠️</strong>`;
+            } else {
+                readStatus.innerHTML = `Status: <strong style="color: #f59e0b;">Getting There 🚀</strong>`;
+            }
+        }
+    };
+
+    form.addEventListener('input', updatePreview);
+    form.addEventListener('change', updatePreview);
+    updatePreview(); // Trigger once on load
+
     const resultCard = document.getElementById('resultCard');
     const predictionResult = document.getElementById('predictionResult');
     const submitBtn = document.getElementById('submitBtn');
@@ -97,6 +124,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const prepPlanList = document.getElementById('prepPlanList');
             const quizContainer = document.getElementById('quizContainer');
             const quizResults = document.getElementById('quizResults');
+            
+            const defaultPanel = document.getElementById('defaultRightPanel');
+            const resultPanel = document.getElementById('resultRightPanel');
+            
+            if (defaultPanel) defaultPanel.classList.add('hidden');
+            if (resultPanel) resultPanel.classList.remove('hidden');
 
             resultCard.classList.remove('hidden');
             resultCard.classList.remove('result-placed');
@@ -264,44 +297,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Assistant Buttons
     const startPrepBtn = document.getElementById('startPrepBtn');
-    const startQuizBtn = document.getElementById('startQuizBtn');
     
     if(startPrepBtn) {
         startPrepBtn.addEventListener('click', () => {
-            const quizCont = document.getElementById('quizContainer');
-            quizCont.classList.remove('hidden');
-            quizCont.scrollIntoView({ behavior: 'smooth' });
+            window.location.href = '/topics';
         });
     }
 
-    if(startQuizBtn) {
-        startQuizBtn.addEventListener('click', () => {
-            const topicInput = document.getElementById('quizTopic');
-            const results = document.getElementById('quizResults');
-            const topic = topicInput.value.trim().toLowerCase();
-            results.innerHTML = '';
-            
-            if (!topic) return;
-            
-            let found = false;
-            for (const [key, questions] of Object.entries(QUIZ_DB)) {
-                if (key.includes(topic) || topic.includes(key)) {
-                    found = true;
-                    questions.forEach((qObj, index) => {
-                        const item = document.createElement('div');
-                        item.className = 'quiz-item';
-                        item.innerHTML = `<strong>Q${index + 1}: ${qObj.q}</strong><div class="quiz-answer"><strong>A:</strong> ${qObj.a}</div>`;
-                        results.appendChild(item);
-                    });
-                    break;
-                }
-            }
-            
-            if (!found) {
-                results.innerHTML = '<div class="quiz-item"><strong>No specific practice questions found for this topic.</strong> Try "DBMS", "OOPs", "Python", "Aptitude", or "HR".</div>';
-            }
-        });
-    }
 });
