@@ -6,6 +6,8 @@ from flask import Flask, request, jsonify, render_template
 # PyCaret is loaded to ensure pipeline loads correctly.
 from pycaret.classification import load_model, predict_model
 
+from topics_data import TOPICS_DATA
+
 app = Flask(__name__)
 
 # --- Load Data & Model ---
@@ -35,6 +37,22 @@ init_app()
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/topics")
+def topics_list():
+    return render_template("topic.html", topic=None, all_topics=TOPICS_DATA)
+
+@app.route("/topic/<topic_id>")
+def topic_detail(topic_id):
+    topic_id = topic_id.lower()
+    if topic_id in TOPICS_DATA:
+        return render_template("topic.html", topic=TOPICS_DATA[topic_id], all_topics=None)
+    return "Topic not found", 404
+
+@app.route("/quiz")
+def quiz():
+    # Pass optional topic parameter down to the template to be read by JS, or JS can parse window.location.search
+    return render_template("quiz.html")
 
 @app.route("/metrics", methods=["GET"])
 def metrics():
