@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Practice Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .quiz-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .topic-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .topic-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .topic-btn:hover, .topic-btn.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #60a5fa;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Active Quiz UI */
+        .question-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .question-card h3 {
+            font-size: 1.15rem;
+            color: #e2e8f0;
+            margin-bottom: 1rem;
+        }
+
+        .option-label {
+            display: block;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        .option-label:hover {
+            background: rgba(51, 65, 85, 0.8);
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 0.75rem;
+            transform: scale(1.2);
+        }
+        
+        .option-label.selected {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        /* Post-Submit Colors */
+        .option-label.correct {
+            border-color: #10b981 !important;
+            background: rgba(16, 185, 129, 0.15) !important;
+            color: #34d399;
+        }
+
+        .option-label.wrong {
+            border-color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.15) !important;
+            color: #f87171;
+            opacity: 0.7;
+        }
+
+        .feedback-text {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #fbbf24;
+            font-style: italic;
+            display: none;
+            padding: 0.5rem;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 6px;
+        }
+
+        .analysis-card {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .analysis-card h2 {
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header glass">
+            <div class="header-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div>
+                    <h1>Interactive Practice Engine</h1>
+                    <p>Test your knowledge and readiness</p>
+                </div>
+                <a href="/topics" id="backBtn" style="color: #60a5fa; text-decoration: none; font-weight: 600;">← Back to Topics</a>
+            </div>
+        </header>
+
+        <div class="content-grid" style="display: block;">
+            
+            <div class="quiz-wrapper">
+                
+                <!-- Topic Selection State -->
+                <section id="selectionState" class="glass" style="padding: 3rem 2rem; text-align: center; border-radius: 15px;">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 1rem;">Select a Topic to Begin</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Choose your weak area to generate a custom 5-question mock assessment.</p>
+                    
+                    <div class="topic-selector">
+                        <button class="topic-btn" data-topic="dbms">DBMS</button>
+                        <button class="topic-btn" data-topic="oops">OOPs</button>
+                        <button class="topic-btn" data-topic="python">Python</button>
+                        <button class="topic-btn" data-topic="aptitude">Aptitude</button>
+                        <button class="topic-btn" data-topic="hr">HR Interview</button>
+                        <button class="topic-btn" data-topic="os">OS</button>
+                        <button class="topic-btn" data-topic="cn">Comp. Networks</button>
+                    </div>
+                </section>
+
+                <!-- Active Quiz State -->
+                <section id="activeQuizState" class="hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 id="quizTitle" style="color: #a78bfa;">Topic Quiz</h2>
+                        <span id="quizCounter" style="color: #94a3b8; font-weight: 600;">Question 1 of 5</span>
+                    </div>
+
+                    <div id="questionsContainer"></div>
+
+                    <div style="text-align: center; margin-top: 2rem; margin-bottom: 4rem;">
+                        <button id="submitQuizBtn" class="btn-predict" style="width: 100%; max-width: 400px; padding: 1rem; font-size: 1.1rem;">Submit Assessment</button>
+                    </div>
+                </section>
+
+                <!-- Analysis State -->
+                <section id="analysisState" class="hidden">
+                    <div class="analysis-card">
+                        <h2 id="finalScoreText">7 / 10</h2>
+                        <p id="scoreFeedback" style="color: #cbd5e1; font-size: 1.1rem; margin-top: 0.5rem;">Validating skills...</p>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 4rem;">
+                        <button id="retryBtn" class="btn-predict btn-secondary" style="width: auto;">Retry This Topic</button>
+                        <button id="anotherBtn" class="btn-predict" style="width: auto; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">Choose Another Topic</button>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='quiz.js') }}"></script>
+</body>
+</html>

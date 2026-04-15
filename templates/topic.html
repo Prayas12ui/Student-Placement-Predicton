@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Syllabus Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .topic-container {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            padding-bottom: 4rem;
+        }
+
+        .topic-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .topic-header h2 {
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .topic-content-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .topic-content-card h3 {
+            color: #60a5fa;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .topic-content-card p {
+            color: #cbd5e1;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .topic-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .topic-list li {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 0.85rem 1.25rem;
+            border-radius: 8px;
+            border-left: 3px solid #60a5fa;
+            color: #e2e8f0;
+        }
+        
+        .resource-list li { border-left-color: #10b981; }
+        .sample-list li { border-left-color: #f472b6; }
+
+        /* Grid for all topics hub */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .topic-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            border-color: #60a5fa;
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2);
+        }
+
+        .topic-card h3 {
+            color: #e2e8f0;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .topic-card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.25rem;
+            flex-grow: 1;
+        }
+
+        .start-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+            width: 100%;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+        }
+
+        .hub-banner {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header glass">
+            <div class="header-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div>
+                    <h1>Placement Syllabus</h1>
+                    <p>Curated learning materials & strategy</p>
+                </div>
+                <!-- If on detail page, back goes to /topics hub. If on hub, back goes to / -->
+                <a href="{{ '/topics' if topic else '/' }}" style="color: #60a5fa; text-decoration: none; font-weight: 600;">
+                    ← Back to {{ 'Topics Hub' if topic else 'Prediction' }}
+                </a>
+            </div>
+        </header>
+
+        <div class="content-grid" style="display: block;">
+            <div class="topic-container">
+                
+                {% if topic %}
+                <!-- SINGLE TOPIC DETAIL STATE -->
+                <div class="topic-header">
+                    <h2>{{ topic.title }}</h2>
+                    <div class="topic-badges">
+                        <span class="chip" style="background: rgba(59, 130, 246, 0.2); border-color: #60a5fa; color: #93c5fd;">High Priority</span>
+                        <span class="chip" style="background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #6ee7b7;">Placement Core</span>
+                    </div>
+                    <p style="color: #cbd5e1; font-size: 1.1rem; line-height: 1.6;">{{ topic.intro }}</p>
+                </div>
+
+                <div class="topic-content-card">
+                    <h3>🎯 Why It Matters</h3>
+                    <p>{{ topic.importance }}</p>
+                </div>
+
+                <div class="topic-content-card">
+                    <h3>📚 Key Concepts</h3>
+                    <ul class="topic-list">
+                        {% for sub in topic.subtopics %}
+                            <li>{{ sub }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="topic-content-card" style="border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.05);">
+                    <h3 style="color: #fbbf24;">⚡ Preparation Strategy</h3>
+                    <p>{{ topic.strategy }}</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="topic-content-card" style="margin-bottom: 0;">
+                        <h3 style="color: #10b981;">🔗 Top Resources</h3>
+                        <ul class="topic-list resource-list">
+                            {% for res in topic.resources %}
+                                <li>{{ res }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="topic-content-card" style="margin-bottom: 0;">
+                        <h3 style="color: #f472b6;">📝 Interview Questions</h3>
+                        <ul class="topic-list sample-list">
+                            {% for sam in topic.samples %}
+                                <li style="font-style: italic;">"{{ sam }}"</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="/quiz?topic={{ topic.id }}" class="start-btn" style="font-size: 1.25rem;">Start {{ topic.title }} Quiz →</a>
+                </div>
+
+                {% elif all_topics %}
+                <!-- MASTER HUB STATE -->
+                <div class="hub-banner">
+                    <h2 style="font-size: 2.5rem; color: #fff; margin-bottom: 1rem;">Complete Placement Curriculum</h2>
+                    <p style="color: #cbd5e1; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Master these core subjects to absolutely dominate your technical interviews. Review the strategies and test your knowledge interactively.</p>
+                </div>
+
+                <div class="topics-grid">
+                    {% for id, details in all_topics.items() %}
+                    <a href="/topic/{{ id }}" class="topic-card">
+                        <h3>{{ details.title }}</h3>
+                        <!-- Truncate intro for card preview -->
+                        <p>{{ details.intro[:120] }}...</p>
+                        <span style="color: #60a5fa; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">Study Topic →</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
